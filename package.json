@@ -1,13 +1,19 @@
 {
-  "name": "pendulum-algorithms",
+  "name": "light-algo",
   "author": "pendulum",
   "license": "MIT",
-  "version": "1.0.0",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "version": "1.0.1",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  
   "files": [
     "dist"
   ],
+  "homepage": "github.com/shkvik/light-algo",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shkvik/light-algo"
+  },
   "scripts": {
     "build": "tsc --build",
     "build:prod": "npm run build && npm prune --omit=dev",
