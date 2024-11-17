@@ -1,7 +1,5 @@
 import { faker } from "@faker-js/faker";
 import { Heap } from "../src";
-import { findRelativeRanks } from "./find-relative-ranks";
-import { maxSlidingWindow } from "./max-sliding-window";
 
 describe('Heap', function () {
   const testDataCout = 100_000;
@@ -110,7 +108,60 @@ describe('Heap', function () {
   });
 
   describe('via LeetCode problems', () => {
+    function findRelativeRanks(score: number[]): string[] {
+      const result = new Array(score.length).fill(null);
+      const placements = {
+        1: "Gold Medal",
+        2: "Silver Medal",
+        3: "Bronze Medal",
+      }
+      const pq = new Heap<[number, number]>((a, b) => {
+        return a[1] > b[1]
+      });
+      for (const [index, value] of score.entries()) {
+        pq.push([index, value]);
+      }
+      for (let i = 0; i < score.length; i++) {
+        const offset = i + 1;
+        const [index, value] = pq.pop()
+        result[index] = placements[offset] || String(offset);
+      }
 
+      return result;
+    };
+
+    /**
+     * @problem 
+     * [239. Sliding Window Maximum](https://leetcode.com/problems/sliding-window-maximum)
+     * ### Решение с использованием кучи:
+     * Эта задача решается с использованием кучи, потому что она позволяет эффективно 
+     * поддерживать и извлекать максимум для текущего окна, обеспечивая оптимальную 
+     * сложность O(n log k) вместо медленного перебора.
+     * 
+     * Ключевой момент, чтобы выкинуть элементы, у которых индекс вышел
+     * за пределы окна
+     * ```
+     * while (heap.top()[1] < i - k + 1) {
+     *   heap.pop();
+     * }
+     * ```
+     */
+    function maxSlidingWindow(nums: number[], k: number): number[] {
+      const heap = new Heap<[number, number]>((a, b) => a[0] > b[0]);
+      const result: number[] = [];
+
+      for (let i = 0; i < k; i++) {
+        heap.push([nums[i], i]);
+      }
+      for (let i = k - 1; i < nums.length; i++) {
+        heap.push([nums[i], i]);
+        while (heap.top()[1] < i - k + 1) {
+          heap.pop();
+        }
+        result.push(heap.top()[0]);
+      }
+      return result;
+    }
     it('506. Relative Ranks', () => {
       // Example 1
       const input1 = [5, 4, 3, 2, 1];
@@ -145,5 +196,4 @@ describe('Heap', function () {
       expect(expect3).toStrictEqual(output3);
     });
   });
-
 });

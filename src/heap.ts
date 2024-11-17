@@ -77,5 +77,3 @@ const heapifyDown = <T>(
     currIdx = childIdx;
   }
 }
-
-
